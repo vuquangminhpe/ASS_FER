@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { FiTrash2, FiPlus, FiMinus } from 'react-icons/fi';
-import '../styles/Cart.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { FiTrash2, FiPlus, FiMinus } from "react-icons/fi";
+import "../styles/Cart.css";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } =
+    useCart();
 
   if (cartItems.length === 0) {
     return (
@@ -26,10 +27,10 @@ const Cart = () => {
 
         <div className="cart-content">
           <div className="cart-items">
-            {cartItems.map(item => (
+            {cartItems.map((item) => (
               <div key={item.id} className="cart-item">
                 <img src={item.image} alt={item.name} />
-                
+
                 <div className="cart-item-details">
                   <Link to={`/product/${item.id}`}>
                     <h3>{item.name}</h3>
@@ -69,17 +70,17 @@ const Cart = () => {
 
           <div className="cart-summary">
             <h2>Order Summary</h2>
-            
+
             <div className="summary-line">
               <span>Subtotal</span>
               <span>${getCartTotal().toFixed(2)}</span>
             </div>
-            
+
             <div className="summary-line">
               <span>Shipping</span>
               <span>Free</span>
             </div>
-            
+
             <div className="summary-total">
               <span>Total</span>
               <span>${getCartTotal().toFixed(2)}</span>

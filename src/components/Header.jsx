@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useShop } from '../context/ShopContext';
+import { getWishlist } from '../services/api';
 import { FiShoppingCart, FiHeart, FiUser, FiLogOut, FiSearch, FiX } from 'react-icons/fi';
 import '../styles/Header.css';
 
@@ -14,6 +15,7 @@ const Header = () => {
   const location = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [wishlistCount, setWishlistCount] = useState(0);
 
   const handleLogout = () => {
     logout();
@@ -36,6 +38,22 @@ const Header = () => {
       setSearchQuery('');
     }
   };
+
+  useEffect(() => {
+    const loadWishlistCount = async () => {
+      if (user) {
+        try {
+          const response = await getWishlist(user.id);
+          setWishlistCount(response.data.length);
+        } catch (error) {
+          console.error('Failed to load wishlist count:', error);
+        }
+      } else {
+        setWishlistCount(0);
+      }
+    };
+    loadWishlistCount();
+  }, [user]);
 
   return (
     <header className="header">
@@ -68,6 +86,9 @@ const Header = () => {
             <>
               <Link to="/wishlist" className="icon-btn">
                 <FiHeart />
+                {wishlistCount > 0 && (
+                  <span className="cart-badge">{wishlistCount}</span>
+                )}
               </Link>
               <Link to="/cart" className="icon-btn cart-btn">
                 <FiShoppingCart />
