@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useCart } from '../context/CartContext';
 import { FiShoppingCart, FiStar } from 'react-icons/fi';
+import { HiFire } from 'react-icons/hi';
 import '../styles/Pages.css';
 
 const NewArrivals = () => {
@@ -17,7 +18,9 @@ const NewArrivals = () => {
       <div className="products-grid">
         {newProducts.map(product => (
           <div key={product.id} className="product-card">
-            <div className="new-badge">NEW</div>
+            <div className="new-badge">
+              <HiFire /> NEW
+            </div>
             <Link to={`/product/${product.id}`}>
               <img src={product.image} alt={product.name} />
             </Link>

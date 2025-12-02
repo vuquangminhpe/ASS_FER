@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { getUserByEmail } from '../services/api';
+import { getUserByEmail, createUser } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -49,18 +49,22 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: 'Email already exists' };
       }
 
-      // Create new user (in real app, backend would handle this)
+      // Create new user
       const newUser = {
         ...userData,
         role: 'user',
         id: Date.now(), // Simple ID generation
       };
 
+      // Save user to database
+      await createUser(newUser);
+
       const { password, ...userWithoutPassword } = newUser;
       setUser(userWithoutPassword);
       localStorage.setItem('user', JSON.stringify(userWithoutPassword));
       return { success: true, user: userWithoutPassword };
     } catch (error) {
+      console.error('Registration error:', error);
       return { success: false, error: 'Registration failed' };
     }
   };

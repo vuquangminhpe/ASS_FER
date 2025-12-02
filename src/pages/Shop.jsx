@@ -12,9 +12,11 @@ const Shop = () => {
   const { addToCart } = useCart();
   const { user } = useAuth();
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [displayCount, setDisplayCount] = useState(30);
 
   useEffect(() => {
     setFilteredProducts(getFilteredProducts());
+    setDisplayCount(30); // Reset display count when filters change
   }, [filters]);
 
   const handleAddToCart = (product) => {
@@ -39,9 +41,17 @@ const Shop = () => {
     }
   };
 
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + 30);
+  };
+
   if (loading) {
     return <div className="loading-container">Loading...</div>;
   }
+
+  const displayedProducts = filteredProducts.slice(0, displayCount);
+  const hasMoreProducts = displayCount < filteredProducts.length;
+  const remainingProducts = filteredProducts.length - displayCount;
 
   return (
     <div className="shop-page">
@@ -128,7 +138,7 @@ const Shop = () => {
           </div>
 
           <div className="products-grid">
-            {filteredProducts.map(product => (
+            {displayedProducts.map(product => (
               <div key={product.id} className="product-card">
                 <Link to={`/product/${product.id}`} className="product-image">
                   <img src={product.image} alt={product.name} />
@@ -170,6 +180,14 @@ const Shop = () => {
               </div>
             ))}
           </div>
+
+          {hasMoreProducts && (
+            <div className="load-more-container">
+              <button onClick={handleLoadMore} className="btn-load-more">
+                Load More Products ({remainingProducts} remaining)
+              </button>
+            </div>
+          )}
 
           {filteredProducts.length === 0 && (
             <div className="no-products">

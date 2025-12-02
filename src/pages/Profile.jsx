@@ -30,13 +30,16 @@ const Profile = () => {
         <div className="profile-info">
           <h2>Account Information</h2>
           <div className="info-item">
-            <strong>Name:</strong> {user?.name}
+            <strong>Name:</strong>
+            <span>{user?.name}</span>
           </div>
           <div className="info-item">
-            <strong>Email:</strong> {user?.email}
+            <strong>Email:</strong>
+            <span>{user?.email}</span>
           </div>
           <div className="info-item">
-            <strong>Address:</strong> {user?.address || 'Not provided'}
+            <strong>Address:</strong>
+            <span>{user?.address || 'Not provided'}</span>
           </div>
         </div>
 
@@ -53,7 +56,7 @@ const Profile = () => {
                     </span>
                   </div>
                   <div className="order-status">
-                    Status: <span className={order.status}>{order.status}</span>
+                    Status: <span className={order.status?.toLowerCase()}>{order.status}</span>
                   </div>
                   <div className="order-total">
                     Total: ${order.total?.toFixed(2)}

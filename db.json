@@ -456,6 +456,11 @@
       "id": "5aa9",
       "userId": 1764674989332,
       "productId": "8"
+    },
+    {
+      "id": "8437",
+      "userId": 1764674989332,
+      "productId": 1
     }
   ],
   "reviews": [
@@ -466,6 +471,14 @@
       "rating": 3,
       "comment": "Oke",
       "date": "2025-12-02T11:33:51.697Z"
+    },
+    {
+      "id": "673d",
+      "productId": 1,
+      "userId": 1764674989332,
+      "rating": 5,
+      "comment": "vv",
+      "date": "2025-12-02T13:00:59.030Z"
     }
   ],
   "cart": [],

@@ -1,18 +1,40 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { FiShoppingCart, FiHeart, FiUser, FiLogOut, FiSearch } from 'react-icons/fi';
+import { useShop } from '../context/ShopContext';
+import { FiShoppingCart, FiHeart, FiUser, FiLogOut, FiSearch, FiX } from 'react-icons/fi';
 import '../styles/Header.css';
 
 const Header = () => {
   const { user, logout, isAdmin } = useAuth();
   const { getCartCount } = useCart();
+  const { updateFilters } = useShop();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleSearchToggle = () => {
+    setSearchOpen(!searchOpen);
+    if (searchOpen) {
+      setSearchQuery('');
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      updateFilters({ searchQuery: searchQuery.trim() });
+      navigate('/shop');
+      setSearchOpen(false);
+      setSearchQuery('');
+    }
   };
 
   return (
@@ -23,16 +45,24 @@ const Header = () => {
         </Link>
 
         <nav className="main-nav">
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-          <Link to="/flash-sales">Flash Sales</Link>
-          <Link to="/new-arrivals">New Arrivals</Link>
+          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+            Home
+          </Link>
+          <Link to="/shop" className={location.pathname === '/shop' ? 'active' : ''}>
+            Shop
+          </Link>
+          <Link to="/flash-sales" className={location.pathname === '/flash-sales' ? 'active' : ''}>
+            Flash Sales
+          </Link>
+          <Link to="/new-arrivals" className={location.pathname === '/new-arrivals' ? 'active' : ''}>
+            New Arrivals
+          </Link>
         </nav>
 
         <div className="header-actions">
-          <div className="search-icon">
-            <FiSearch />
-          </div>
+          <button className="icon-btn search-toggle" onClick={handleSearchToggle}>
+            {searchOpen ? <FiX /> : <FiSearch />}
+          </button>
 
           {user ? (
             <>
@@ -65,6 +95,23 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {searchOpen && (
+        <div className="search-bar-container">
+          <form onSubmit={handleSearchSubmit} className="search-form">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+            <button type="submit" className="btn-search">
+              Search
+            </button>
+          </form>
+        </div>
+      )}
     </header>
   );
 };

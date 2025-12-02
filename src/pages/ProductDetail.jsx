@@ -29,7 +29,22 @@ const ProductDetail = () => {
         getReviewsByProduct(id),
       ]);
       setProduct(productRes.data);
-      setReviews(reviewsRes.data);
+
+      // Fetch user data for each review
+      const { getUsers } = await import('../services/api');
+      const usersRes = await getUsers();
+      const usersMap = usersRes.data.reduce((acc, user) => {
+        acc[user.id] = user.name;
+        return acc;
+      }, {});
+
+      // Add user names to reviews
+      const reviewsWithUsers = reviewsRes.data.map(review => ({
+        ...review,
+        userName: usersMap[review.userId] || 'Anonymous'
+      }));
+
+      setReviews(reviewsWithUsers);
     } catch (error) {
       console.error('Failed to load product:', error);
     } finally {
@@ -185,13 +200,16 @@ const ProductDetail = () => {
               reviews.map(review => (
                 <div key={review.id} className="review-item">
                   <div className="review-header">
-                    <div className="review-rating">
-                      {[...Array(5)].map((_, i) => (
-                        <FiStar
-                          key={i}
-                          className={i < review.rating ? 'star-filled' : 'star-empty'}
-                        />
-                      ))}
+                    <div className="review-info">
+                      <span className="review-user">{review.userName}</span>
+                      <div className="review-rating">
+                        {[...Array(5)].map((_, i) => (
+                          <FiStar
+                            key={i}
+                            className={i < review.rating ? 'star-filled' : 'star-empty'}
+                          />
+                        ))}
+                      </div>
                     </div>
                     <span className="review-date">
                       {new Date(review.date).toLocaleDateString()}
